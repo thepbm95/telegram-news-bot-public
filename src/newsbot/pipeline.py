@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 import logging
 from typing import Protocol
 
@@ -10,7 +10,7 @@ from newsbot.catalog import eligible_recipients
 from newsbot.extractors import ExtractionError
 from newsbot.feeds import FeedFetchResult
 from newsbot.models import ArticleCandidate, ExtractedArticle, FeedConfig, SummaryResult
-from newsbot.state import BotState, SeenEntry, prune_seen
+from newsbot.state import BotState, SeenEntry, parse_timestamp, prune_seen
 from newsbot.subscriptions import SubscriptionStats
 from newsbot.summarizers import SummarizationError
 from newsbot.telegram import (
@@ -22,6 +22,9 @@ from newsbot.telegram import (
 
 
 LOGGER = logging.getLogger(__name__)
+# Refreshing last_seen_at more often would rewrite the state on every run without news,
+# while pruning only needs day-level precision.
+LAST_SEEN_REFRESH = timedelta(hours=1)
 
 
 class StateStoreProtocol(Protocol):
@@ -226,11 +229,13 @@ class Pipeline:
     ) -> list[ArticleCandidate]:
         """Refresh known entries, bootstrap first-time feeds and return genuinely new articles."""
         seen_at = self._timestamp()
+        refresh_before = parse_timestamp(seen_at) - LAST_SEEN_REFRESH
         new_items: list[ArticleCandidate] = []
         for candidate in result.candidates:
             entry = state.seen.get(candidate.article_id)
             if entry is not None:
-                entry.last_seen_at = seen_at
+                if parse_timestamp(entry.last_seen_at) <= refresh_before:
+                    entry.last_seen_at = seen_at
                 entry.feeds = list(dict.fromkeys((*entry.feeds, *candidate.feed_ids)))
                 continue
             if not state.bootstrapped_feeds.intersection(candidate.feed_ids):

@@ -297,6 +297,23 @@ async def test_last_seen_is_refreshed_so_long_lived_rss_items_are_not_pruned() -
 
 
 @pytest.mark.asyncio
+async def test_last_seen_is_only_refreshed_hourly_so_quiet_runs_do_not_change_state() -> None:
+    harness = Harness(bootstrapped(("111", selected("a"))), {"a": [article("x")]})
+    await harness.run()
+    first = deepcopy(harness.state)
+
+    for _ in range(3):
+        await harness.run()
+
+    assert harness.state == first
+    harness.clock.advance(60)
+
+    await harness.run()
+
+    assert harness.state.seen["x"].last_seen_at > first.seen["x"].last_seen_at
+
+
+@pytest.mark.asyncio
 async def test_items_of_a_failing_feed_are_kept_until_it_recovers() -> None:
     harness = Harness(bootstrapped(("111", selected("a"))), {"a": [article("x")]})
     await harness.run()

@@ -6,7 +6,7 @@
 
 - Cập nhật gần nhất: `2026-09-23`
 - Trạng thái dự án: `DONE` — vận hành từ repo public `thepbm95/telegram-news-bot-public`, state ở repo private `thepbm95/telegram-news-bot`
-- Bước đang thực hiện: `Không có — P25–P35 đã hoàn tất`
+- Bước đang thực hiện: `P36 — Lịch 10 phút và giảm commit state`
 - Bước tiếp theo: `Theo dõi Actions ở repo public; khi model chính hết quota xem summaries_by_provider để xác nhận model dự phòng`
 - Lỗi đang mở: `0`
 - Blocker: không có.
@@ -124,6 +124,7 @@ flowchart TD
 | P33 | Menu lệnh Telegram, `/them` và `/bo` | DONE | Gõ `/` hiện danh sách lệnh (`setMyCommands`); `/them` giữ chuyên mục cũ và tối đa 10; `/bo` bớt chuyên mục; test đạt, deploy xanh | RED 12 test; GREEN 147 test, compileall, secret scan sạch. `/them`, `/bo` không kèm số hiện danh sách có tên báo/chuyên mục và dấu ✅; trường `mode` một lần, schema 3 tương thích ngược. Deploy run `35812355097` xanh, `setMyCommands` không lỗi |
 | P34 | Giảm phút GitHub Actions | DONE | Lịch 30 phút; lượt lịch không chạy test; ước tính < 2.000 phút/tháng | Người dùng đồng ý sau khi thấy gross ~$3.2, billed $0 (18–23/9). RED 2 test workflow; GREEN 148 test; run `35814262473` xanh 35 giây. Ước tính 48 lượt/ngày ≈ 1.450 phút/tháng. Khuyên người dùng đặt ngân sách Actions $0 |
 | P35 | Tách repo public cho code, giữ state ở repo private | DONE | Repo public mới không có lịch sử state/log cũ; workflow đọc/ghi state repo private qua deploy key; secret mới đủ; dry-run và lượt thật xanh; workflow repo cũ tắt; lịch 15 phút; keepalive 60 ngày | Repo public `thepbm95/telegram-news-bot-public` tạo từ một commit không lịch sử (49 file, không state, secret scan sạch, 150 test). Deploy key ghi vào repo state, secret `STATE_DEPLOY_KEY`, biến `STATE_REPOSITORY`/`STATE_BRANCH` đã đặt; workflow bot ở repo public đang tắt để tránh chạy song song. Người dùng nhập 2 secret. Dry-run `35815726828` xanh (55/55 feed). Tắt workflow repo private, bật repo public; lượt thật `35815816044` xanh, push state vào repo private `7bde06b..e671910`. Keepalive tạo commit `6653deb` thành công |
+| P36 | Lịch 10 phút và giảm commit state | IN_PROGRESS | Cron 10 phút; `last_seen_at` chỉ làm mới khi cũ hơn 1 giờ nên lượt không có gì mới không commit state; test và lượt thật xanh | Người dùng hỏi 5 phút rồi chốt 10 phút (2026-09-23) |
 
 ## Nhật ký lỗi
 
@@ -265,3 +266,4 @@ Không ghi secrets vào repository hoặc chat.
 - `2026-09-23`: Người dùng đồng ý tách repo public; mở P35 `IN_PROGRESS`.
 - `2026-09-23`: Tạo repo public, deploy key và biến state; P35 BLOCKED chờ người dùng nhập 2 secret. Từ nay code nằm ở repo public nhánh `main`; repo private chỉ lưu state.
 - `2026-09-23`: P35 DONE; bot chạy từ repo public 15 phút/lần, state lưu repo private, workflow repo cũ đã tắt.
+- `2026-09-23`: Người dùng muốn lịch 5 phút; mở P36 `IN_PROGRESS`.

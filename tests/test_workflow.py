@@ -8,7 +8,7 @@ KEEPALIVE = Path(".github/workflows/keepalive.yml")
 def test_workflow_has_safety_controls() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
 
-    assert 'cron: "7,22,37,52 * * * *"' in text
+    assert 'cron: "2-59/10 * * * *"' in text
     assert "workflow_dispatch:" in text
     assert "contents: read" in text
     assert "cancel-in-progress: false" in text

@@ -14,7 +14,7 @@ Tóm tắt dài khoảng 20–25% số từ của bài gốc và không bao gi�
 
 ## Cách bot hoạt động
 
-GitHub Actions chạy ở phút 7, 22, 37 và 52 mỗi giờ. Lượt theo lịch bỏ qua bước chạy test cho nhanh; lượt chạy tay vẫn chạy test. Mỗi lần chạy, bot:
+GitHub Actions chạy 10 phút một lần (phút 2, 12, 22, 32, 42, 52; lịch GitHub có thể trễ vài phút khi đông). Lượt theo lịch bỏ qua bước chạy test cho nhanh; lượt chạy tay vẫn chạy test. Mỗi lần chạy, bot:
 
 1. Xử lý lệnh và lựa chọn trong Telegram.
 2. Retry các bản tin đang chờ đúng người nhận.
@@ -55,7 +55,7 @@ Lệnh sẽ hỏi kín Telegram token mới, in username để bạn xác nhận
 
 Bot dùng hai repository:
 
-- **Repo code (public)**: chứa code và workflow. Repo public được chạy GitHub Actions không giới hạn phút, nên bot chạy 15 phút một lần mà vẫn miễn phí.
+- **Repo code (public)**: chứa code và workflow. Repo public được chạy GitHub Actions không giới hạn phút, nên bot chạy 10 phút một lần mà vẫn miễn phí.
 - **Repo state (private)**: chỉ dùng để lưu `state/seen.json`. File này chứa chat ID người đăng ký và lịch sử giao nhận nên không được để public.
 
 Mỗi lượt, workflow tải state từ repo private bằng một deploy key chỉ có quyền trên đúng repo đó, chạy bot, rồi đẩy state đã cập nhật về repo private. Workflow `keepalive.yml` tạo một commit rỗng mỗi tháng, vì GitHub tự tắt lịch của repo public sau 60 ngày không có hoạt động.
@@ -80,7 +80,7 @@ Vào tab **Actions → Telegram news bot → Run workflow**.
 
 1. Chạy thử với `dry_run=true`, `limit=1`. Kết quả đúng là workflow xanh, log có `sent: 0`, `skipped: 1`, và Telegram không nhận tin.
 2. Chạy thật với `dry_run=false`, `limit=1`. Kết quả đúng là workflow xanh và nếu có bài mới thì repo state nhận commit `chore: update delivery state`.
-3. Kiểm tra tiêu đề, nội dung tóm tắt và link. Nếu ổn, không cần thao tác thêm: lịch 15 phút đã được bật sẵn.
+3. Kiểm tra tiêu đề, nội dung tóm tắt và link. Nếu ổn, không cần thao tác thêm: lịch 10 phút đã được bật sẵn.
 
 Có thể chạy thử cục bộ không cần secret:
 
@@ -90,7 +90,7 @@ news-bot --dry-run --limit 1
 
 ## Đăng ký và chọn chuyên mục
 
-Bot trả lời ở lượt workflow kế tiếp, thường trong khoảng 15 phút.
+Bot trả lời ở lượt workflow kế tiếp, thường trong khoảng 10 phút.
 
 1. Mở bot và gửi `/start`. Bot gửi danh sách chuyên mục đánh số, nhóm theo từng báo.
 2. Trả lời bằng các số muốn nhận, cách nhau dấu cách hoặc dấu phẩy. Có thể dùng dải số, ví dụ `1 3 18-20`. Mỗi người chọn tối đa 10 chuyên mục.
