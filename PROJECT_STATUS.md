@@ -5,9 +5,9 @@
 ## Tóm tắt hiện tại
 
 - Cập nhật gần nhất: `2026-09-23`
-- Trạng thái dự án: `DONE` — chọn báo/chuyên mục theo từng người đang vận hành
-- Bước đang thực hiện: `P35 — BLOCKED chờ secret trong repo public`
-- Bước tiếp theo: `Sau khi có 2 secret: dry-run repo public → tắt workflow repo private → bật workflow repo public → chạy thật và kiểm tra state commit vào repo private`
+- Trạng thái dự án: `DONE` — vận hành từ repo public `thepbm95/telegram-news-bot-public`, state ở repo private `thepbm95/telegram-news-bot`
+- Bước đang thực hiện: `Không có — P25–P35 đã hoàn tất`
+- Bước tiếp theo: `Theo dõi Actions ở repo public; khi model chính hết quota xem summaries_by_provider để xác nhận model dự phòng`
 - Lỗi đang mở: `0`
 - Blocker: không có.
 - Đặc tả gốc: `docs/superpowers/specs/2026-09-18-telegram-news-bot-design.md`
@@ -123,7 +123,7 @@ flowchart TD
 | P32 | Ghép CLI, tài liệu, deploy và nghiệm thu | DONE | Full suite/compile/secret scan/workflow xanh; thông báo đến đủ người; chọn số nhận đúng chuyên mục | Local: 135 test, compileall, secret scan sạch; `news-bot --dry-run --limit 3` đọc 55/55 feed, 3.882 ứng viên, state không đổi; diễn tập trên bản sao state thật: 4 thông báo đúng một lần, chọn `1 18 47` khởi tạo 3 feed không gửi, lượt sau gửi đúng 1 bài mới cho đúng người. Deploy: run `35811726082` xanh (135 test trên runner), state thật lên schema 3, 4/4 subscriber đã nhận thông báo (`menu_pending`=0), 1.205 seen, 0 pending, không gửi bài. Run `35811988910`: 1 người chọn 5 chuyên mục, xác nhận gửi thành công, 183 bài khởi tạo không gửi. Run `35812355097`: bài mới đầu tiên gửi đúng người đã chọn (chỉ tải 5 feed của người đó), tóm tắt bằng `gemini-3.1-flash-lite`, 0 lỗi |
 | P33 | Menu lệnh Telegram, `/them` và `/bo` | DONE | Gõ `/` hiện danh sách lệnh (`setMyCommands`); `/them` giữ chuyên mục cũ và tối đa 10; `/bo` bớt chuyên mục; test đạt, deploy xanh | RED 12 test; GREEN 147 test, compileall, secret scan sạch. `/them`, `/bo` không kèm số hiện danh sách có tên báo/chuyên mục và dấu ✅; trường `mode` một lần, schema 3 tương thích ngược. Deploy run `35812355097` xanh, `setMyCommands` không lỗi |
 | P34 | Giảm phút GitHub Actions | DONE | Lịch 30 phút; lượt lịch không chạy test; ước tính < 2.000 phút/tháng | Người dùng đồng ý sau khi thấy gross ~$3.2, billed $0 (18–23/9). RED 2 test workflow; GREEN 148 test; run `35814262473` xanh 35 giây. Ước tính 48 lượt/ngày ≈ 1.450 phút/tháng. Khuyên người dùng đặt ngân sách Actions $0 |
-| P35 | Tách repo public cho code, giữ state ở repo private | BLOCKED | Repo public mới không có lịch sử state/log cũ; workflow đọc/ghi state repo private qua deploy key; secret mới đủ; dry-run và lượt thật xanh; workflow repo cũ tắt; lịch 15 phút; keepalive 60 ngày | Repo public `thepbm95/telegram-news-bot-public` tạo từ một commit không lịch sử (49 file, không state, secret scan sạch, 150 test). Deploy key ghi vào repo state, secret `STATE_DEPLOY_KEY`, biến `STATE_REPOSITORY`/`STATE_BRANCH` đã đặt; workflow bot ở repo public đang tắt để tránh chạy song song. BLOCKED chờ người dùng nhập `GEMINI_API_KEY`, `TELEGRAM_BOT_TOKEN` vào repo public |
+| P35 | Tách repo public cho code, giữ state ở repo private | DONE | Repo public mới không có lịch sử state/log cũ; workflow đọc/ghi state repo private qua deploy key; secret mới đủ; dry-run và lượt thật xanh; workflow repo cũ tắt; lịch 15 phút; keepalive 60 ngày | Repo public `thepbm95/telegram-news-bot-public` tạo từ một commit không lịch sử (49 file, không state, secret scan sạch, 150 test). Deploy key ghi vào repo state, secret `STATE_DEPLOY_KEY`, biến `STATE_REPOSITORY`/`STATE_BRANCH` đã đặt; workflow bot ở repo public đang tắt để tránh chạy song song. Người dùng nhập 2 secret. Dry-run `35815726828` xanh (55/55 feed). Tắt workflow repo private, bật repo public; lượt thật `35815816044` xanh, push state vào repo private `7bde06b..e671910`. Keepalive tạo commit `6653deb` thành công |
 
 ## Nhật ký lỗi
 
@@ -264,3 +264,4 @@ Không ghi secrets vào repository hoặc chat.
 - `2026-09-23`: P34 DONE; lịch 30 phút, lượt lịch bỏ test; run `35814262473` 35 giây.
 - `2026-09-23`: Người dùng đồng ý tách repo public; mở P35 `IN_PROGRESS`.
 - `2026-09-23`: Tạo repo public, deploy key và biến state; P35 BLOCKED chờ người dùng nhập 2 secret. Từ nay code nằm ở repo public nhánh `main`; repo private chỉ lưu state.
+- `2026-09-23`: P35 DONE; bot chạy từ repo public 15 phút/lần, state lưu repo private, workflow repo cũ đã tắt.
