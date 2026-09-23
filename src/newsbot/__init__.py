@@ -1,0 +1,2 @@
+"""Personal Telegram news summarizer."""
+

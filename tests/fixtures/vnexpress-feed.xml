@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>VnExpress Thời sự</title>
+    <item>
+      <title><![CDATA[Bài thời sự thứ nhất]]></title>
+      <link>https://vnexpress.net/bai-thu-nhat-123.html?utm_source=rss&amp;keep=1#comments</link>
+      <description><![CDATA[<p>Mô tả <strong>bài thứ nhất</strong>.</p>]]></description>
+      <pubDate>Fri, 18 Sep 2026 08:30:00 +0700</pubDate>
+    </item>
+    <item>
+      <title>Bài thời sự thứ hai</title>
+      <link>https://vnexpress.net/bai-thu-hai-456.html</link>
+      <description><![CDATA[<img src="photo.jpg"/><p>Mô tả bài thứ hai.</p>]]></description>
+      <pubDate>Fri, 18 Sep 2026 09:30:00 +0700</pubDate>
+    </item>
+  </channel>
+</rss>
+

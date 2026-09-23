@@ -1,0 +1,26 @@
+name: Keep schedule alive
+
+# GitHub disables scheduled workflows in a public repository after 60 days without
+# activity. Delivery state is committed to the private state repository, so this
+# repository needs its own small monthly commit.
+on:
+  schedule:
+    - cron: "17 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Record activity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "chore: keep scheduled workflow active"
+          git push
